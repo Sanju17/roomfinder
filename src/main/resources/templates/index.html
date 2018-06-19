@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}" >
+<head>
+    <title>Room Finder - Home Page</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mySpace">
+    <div class="jumbotron center">
+        <p sec:authorize="!isAuthenticated()">
+            Sign in for free to rent a room.
+        </p>
+        <p>
+            <a href="#" class="btn btn-dark">Search Room to Rent</a> <strong>OR</strong> <a href="/addRoom" class="btn btn-dark">Add Room to Rent</a>
+        </p>
+
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/main_layout}" >
+<head>
+    <title>My Room List</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mySpace">
+    <div class="card">
+        <div class="card card-body">
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Room Type</th>
+                    <th>Price</th>
+                    <th>Location</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="room : ${roomList}">
+                    <td th:text="${room.roomType}"></td>
+                    <td th:text="${room.price}"></td>
+                    <td th:text="${room.location}"></td>
+                    <td th:text="${room.description}"></td>
+                    <td>
+                        <a th:href="@{/update(roomId=${room.id})}" class="btn btn-dark">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
