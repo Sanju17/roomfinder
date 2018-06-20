@@ -6,12 +6,14 @@ import com.niraaz.roomfinder.services.RoomService;
 import com.niraaz.roomfinder.services.UserService;
 import com.niraaz.roomfinder.utils.RFConstants;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.Map;
 import java.util.Optional;
 
@@ -52,15 +54,12 @@ public class RoomController {
 	}
 
 	@GetMapping("/roomList")
-	public String getRoomsOfRenter(Model model) {
-		Optional<User> userOptional = userService.findById( 1 );
-		if(userOptional.isPresent()) {
-			User user = userOptional.get();
-			model.addAttribute( "roomList", roomService.findRoomByRenter( user ) );
-			return "views/roomList";
-		}else {
-			return "index";
-		}
+	public String getRoomsOfRenter( Model model, Principal principal ) {
+
+		User user = getUserByUsername( principal.getName() );
+		model.addAttribute( "roomList", roomService.findRoomByRenter( user ) );
+		return "views/roomList";
+
 	}
 
 	@GetMapping("/update")
@@ -79,21 +78,19 @@ public class RoomController {
 	}
 
 	@PostMapping("/update")
-	public String updateRoomInfo( @Valid @ModelAttribute("room") Room room, BindingResult bindingResult, Model model ) {
+	public String updateRoomInfo( @Valid @ModelAttribute("room") Room room, BindingResult bindingResult, Model model, Principal principal ) {
 
 		if(bindingResult.hasErrors()) {
 			return "views/updateRoom";
 		}
 
-		Optional<User> userOptional = userService.findById( 1 );
-		if(userOptional.isPresent()) {
+		User user = getUserByUsername( principal.getName() );
+		roomService.save( room, user );
+		return "redirect:/roomList";
+	}
 
-			User user = userOptional.get();
-			roomService.save( room, user );
-			return "redirect:/roomList";
-		}else {
-			return "views/updateRoom";
-		}
+	private User getUserByUsername(String username) {
+		return userService.findbyUsername(username);
 	}
 
 }
